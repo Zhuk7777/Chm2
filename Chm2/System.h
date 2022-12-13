@@ -12,9 +12,9 @@ class System {
 	int sizeMatr;
 	int wideTape;
 
-	int** GaussMethod()
+	int** GaussMethod(int** PQ)
 	{
-		int** PQ = initializingPQ();
+		PQ = initializingPQ();
 		int i, j;
 		double R;
 
@@ -24,24 +24,29 @@ class System {
 			PQ[0][k] = i;
 			PQ[1][k] = j;
 
-			for (int t = 0; t < sizeMatr; t++)
-				matrix[i][t] *= R;
+			for (int c = 0; c < sizeMatr; c++)
+				matrix[i][c] *= R;
 			f[i] *= R;
 
-			for (int t = 0; t < sizeMatr; t++)
+			for (int r = 0; r < sizeMatr; r++)
 			{
-				if (t != i && minor(t, -1, PQ) != false)
+				R = matrix[r][j];
+
+				if (minor(r, -1, PQ) != false)
 				{
+					for (int c = 0; c < sizeMatr; c++)
+						matrix[r][c] -= R * matrix[i][j];
+					f[r] -= R * f[i];
 				}
 			}
 		}
-		
+
 	}
 
-	double absMax(int& _i, int& _j,int**PQ)
+	double absMax(int& _i, int& _j, int** PQ)
 	{
 		double max = -1;
-		for(int i=0;i<sizeMatr;i++)
+		for (int i = 0; i < sizeMatr; i++)
 			for (int j = 0; j < sizeMatr; j++)
 			{
 				if (abs(matrix[i][j]) > max && minor(i, j, PQ) != false)
@@ -54,7 +59,7 @@ class System {
 		return max;
 	}
 
-	bool minor(int i, int j,int** PQ)
+	bool minor(int i, int j, int** PQ)
 	{
 		bool row = true, column = true;
 		for (int k = 0; k < sizeMatr; k++)
@@ -117,19 +122,19 @@ public:
 		delete[]f;
 	}
 
-	void fillMatrix() 
+	void fillMatrix()
 	{
 		for (int i = 0; i < sizeMatr; i++)
 			for (int j = 0; j < sizeMatr; j++)
 				std::cin >> matrix[i][j];
 	}
-	void fillZeros() 
+	void fillZeros()
 	{
 		for (int i = 0; i < sizeMatr; i++)
 			for (int j = 0; j < sizeMatr; j++)
 				matrix[i][j] = 0;
 	}
-	void randomFillMatr(double max, double min) 
+	void randomFillMatr(double max, double min)
 	{
 		int countOfVectors = 2 * wideTape - 1;
 		double* vector = new double[sizeMatr];
@@ -165,7 +170,7 @@ public:
 		for (int i = 0; i < sizeMatr; i++)
 			std::cin >> f[i];
 	}
-	void randomFillF(double max, double min) 
+	void randomFillF(double max, double min)
 	{
 		for (int j = 0; j < sizeMatr; j++) {
 			f[j] = (rand() % (int)max + min) / (rand() % (int)max + min);
@@ -197,6 +202,18 @@ public:
 	{
 		for (int i = 0; i < sizeMatr; i++)
 			std::cout << f[i] << " ";
+	}
+
+	double* systemSolution()
+	{
+		int** PQ;
+		GaussMethod(PQ);
+		double* x = new double[sizeMatr];
+
+		for (int i = sizeMatr - 1; i >= 0; i--)
+		{
+			x[PQ[1][i]]=f[i]-
+		}
 	}
 
 

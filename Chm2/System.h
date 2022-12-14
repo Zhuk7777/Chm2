@@ -14,7 +14,7 @@ class System {
 
 	void GaussMethod(int** PQ)
 	{
-		printMatrix();
+		//printMatrix();
 		int i, j;
 		double R;
 
@@ -219,6 +219,7 @@ public:
 	{
 		int** PQ = initializingPQ();
 		GaussMethod(PQ);
+
 		double* x = new double[sizeMatr];
 		for (int i = 0; i < sizeMatr; i++)
 			x[i] = 0;
@@ -228,10 +229,13 @@ public:
 		{
 			sum = 0;
 			for (int j = 0; j < sizeMatr; j++)
-				if (j != i)
-					sum += matrix[PQ[0][j]][i] * x[j];
-			x[PQ[1][i]] = f[i] - sum;
+			{
+				if (j != PQ[1][i])
+					sum += matrix[PQ[0][i]][j] * x[j];
+			}
+			x[PQ[1][i]] = f[PQ[0][i]] - sum;
 		}
+
 
 		return x;
 	}

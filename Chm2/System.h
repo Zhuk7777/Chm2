@@ -12,9 +12,9 @@ class System {
 	int sizeMatr;
 	int wideTape;
 
-	int** GaussMethod(int** PQ)
+	void GaussMethod(int** PQ)
 	{
-		PQ = initializingPQ();
+		printMatrix();
 		int i, j;
 		double R;
 
@@ -32,14 +32,20 @@ class System {
 			{
 				R = matrix[r][j];
 
-				if (minor(r, -1, PQ) != false)
+				if (minor(r, sizeMatr, PQ) != false)
 				{
 					for (int c = 0; c < sizeMatr; c++)
-						matrix[r][c] -= R * matrix[i][j];
+						matrix[r][c] -= R * matrix[i][c];
 					f[r] -= R * f[i];
+					
 				}
 			}
+
+			//printMatrix();
 		}
+
+		/*printMatrix();
+		printF();*/
 
 	}
 
@@ -51,7 +57,7 @@ class System {
 			{
 				if (abs(matrix[i][j]) > max && minor(i, j, PQ) != false)
 				{
-					max = abs(matrix[i][j]);
+					max = matrix[i][j];
 					_i = i;
 					_j = j;
 				}
@@ -83,6 +89,8 @@ class System {
 		for (int i = 0; i < 2; i++)
 			for (int j = 0; j < sizeMatr; j++)
 				PQ[i][j] = -1;
+
+		return PQ;
 	}
 
 public:
@@ -165,6 +173,7 @@ public:
 		}
 
 	}
+
 	void fillF()
 	{
 		for (int i = 0; i < sizeMatr; i++)
@@ -197,6 +206,8 @@ public:
 			for (int j = 0; j < sizeMatr; j++)
 				std::cout << matrix[i][j] << " ";
 		}
+
+		std::cout << "\n";
 	}
 	void printF()
 	{
@@ -206,14 +217,23 @@ public:
 
 	double* systemSolution()
 	{
-		int** PQ;
+		int** PQ = initializingPQ();
 		GaussMethod(PQ);
 		double* x = new double[sizeMatr];
+		for (int i = 0; i < sizeMatr; i++)
+			x[i] = 0;
+		double sum;
 
 		for (int i = sizeMatr - 1; i >= 0; i--)
 		{
-			x[PQ[1][i]]=f[i]-
+			sum = 0;
+			for (int j = 0; j < sizeMatr; j++)
+				if (j != i)
+					sum += matrix[PQ[0][j]][i] * x[j];
+			x[PQ[1][i]] = f[i] - sum;
 		}
+
+		return x;
 	}
 
 

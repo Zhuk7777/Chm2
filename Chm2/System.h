@@ -14,7 +14,6 @@ class System {
 
 	void GaussMethod(int** PQ)
 	{
-		//printMatrix();
 		int i, j;
 		double R;
 
@@ -41,11 +40,8 @@ class System {
 				}
 			}
 
-			//printMatrix();
+			
 		}
-
-		/*printMatrix();
-		printF();*/
 
 	}
 
